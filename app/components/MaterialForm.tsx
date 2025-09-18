@@ -9,8 +9,8 @@ interface Fabrics {
 import { useState } from "react";
 
 export default function MaterialForm() {
-  const goodFabrics = ["cotton", "linen", "wool"];
-  const badFabrics = ["polyester", "viscose", "rayon", "elastene"];
+  const goodFabrics = ["cotton", "linen", "wool", "cashemere", "silk", "hemp", "tencel", "modal"];
+  const badFabrics = ["polyester","nylon", "viscose", "rayon", "elastene", "acrylic", "acetate"];
   const fabricsClasses = ["sriracha", "belacan", "thousand-island", "mustard", "soy-sauce", "ketchup", "satay", "kewpie"];
 
   const [material, setMaterial] = useState("");
@@ -79,26 +79,35 @@ export default function MaterialForm() {
         </div>
       </div>
 
-      <div className="flex w-3xl m-auto p-4 gap-2 justify-center">
+      <div className="flex w-3xl m-auto p-4 gap-4 justify-center pt-20">
         {fabricList.map((fabric, index) => (
-          <div className={`${fabric.className}`} key={index}>
+          <div className={`${fabric.className} p-2.5 rounded-2xl`} key={index}>
             {fabric.material} - {fabric.percentage}%
           </div>
         ))}
       </div>
 
-      {/* <div className="grid justify-center">
-        <p>All: {counter}</p>
-        <p>Good Score: {goodScore}</p>
-        <p>Bad Score: {badScore}</p>
-      </div> */}
-
       <div className="grid justify-center">
-        {goodScore >= 70 && badScore < 70 ? <p>High Quality</p> : ""}
+        {goodScore >= 70 && badScore <= 30 ? 
+          <div className="flex flex-col gap-4 text-lg items-center">
+            <p>High Quality</p>
+            <p>Buy it (durable, breathable, long-term).</p>
+          </div>
+         : ""}
 
-        {goodScore >= 50 && goodScore < 70 && badScore >= 70 ? <p>Medium Quality</p> : ""}
+        {goodScore >= 50 && goodScore <= 69 ? 
+        <div className="flex flex-col gap-4 text-lg items-center">
+          <p>Medium Quality</p>
+          <p>(okay if you love style/price).</p>
+        </div>
+         : ""}
 
-        {goodScore < 50 && badScore >= 50 ? <p>Low Quality</p> : ""}
+        {(goodScore > 0 && goodScore < 50) || badScore >= 50 ? 
+        <div className="flex flex-col gap-4 text-lg items-center">
+          <p>Low Quality</p>
+          <p>(fast fashion, short lifespan).</p>
+        </div>
+         : ""}
       </div>
     </div>
   );
