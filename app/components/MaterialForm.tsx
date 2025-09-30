@@ -47,6 +47,13 @@ export default function MaterialForm() {
     }
   };
 
+  const handleClean = () => {
+    setGoodScore(0)
+    setBadScore(0)
+    setCounter(0)
+    setFabricList([])
+  }
+
   return (
     <div className="grid gap-4">
       <div className="flex flex-col gap-8 justify-center items-center">
@@ -76,6 +83,9 @@ export default function MaterialForm() {
           <button className="bg-pink-900 text-lime-200 font-semibold p-2 pl-5 pr-5 rounded cursor-pointer" onClick={handleFabrics}>
             Add +
           </button>
+          <button className="bg-lime-200 text-pink-900 border-pink-900 border-2 font-semibold p-2 pl-5 pr-5 rounded cursor-pointer" onClick={handleClean}>
+            Clear
+          </button>
         </div>
       </div>
 
@@ -87,6 +97,7 @@ export default function MaterialForm() {
         ))}
       </div>
 
+      { counter == 100 ? 
       <div className="grid justify-center">
         {goodScore >= 70 && badScore <= 30 ? 
           <div className="flex flex-col gap-4 text-lg items-center">
@@ -102,13 +113,14 @@ export default function MaterialForm() {
         </div>
          : ""}
 
-        {(goodScore > 0 && goodScore < 50) || badScore >= 50 ? 
+        {(goodScore > 0 && goodScore < 50) || badScore > 50 ? 
         <div className="flex flex-col gap-4 text-lg items-center">
           <p>Low Quality</p>
           <p>(fast fashion, short lifespan).</p>
         </div>
          : ""}
       </div>
+      : "" }
     </div>
   );
 }

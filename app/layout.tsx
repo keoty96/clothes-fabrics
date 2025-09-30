@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Clothes Fabrics",
+  title: "Is it worth wearing?",
   description: "Here we help you decide it a clothe item is worth buying!",
 };
 
