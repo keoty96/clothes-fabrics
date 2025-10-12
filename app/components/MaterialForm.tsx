@@ -57,9 +57,8 @@ export default function MaterialForm() {
   return (
     <div className="grid gap-4">
       <div className="flex flex-col gap-8 justify-center items-center">
-        <p className="text-2xl">Add a Material</p>
-        <div className="flex gap-4 justify-center items-center">
-          <label>Material</label>
+        <div className="flex flex-col gap-4 justify-center items-center">
+          <label>Add a Material</label>
           <input
             onChange={(e) => setMaterial(e.target.value)}
             value={material}
@@ -70,7 +69,7 @@ export default function MaterialForm() {
             disabled={counter >= 100 ? true : false}
           />
 
-          <label>Percentage</label>
+          <label>Add a Percentage</label>
           <input
             onChange={(e) => setPercentage(e.target.value)}
             value={percentage}
@@ -80,16 +79,19 @@ export default function MaterialForm() {
             className="border-3 bg-amber-100 text-amber-900 p-2 rounded-xl font-semibold focus:outline-current disabled:opacity-50"
             disabled={counter >= 100 ? true : false}
           />
-          <button className="bg-pink-900 text-lime-200 font-semibold p-2 pl-5 pr-5 rounded cursor-pointer" onClick={handleFabrics}>
+          <div className="flex gap-4">
+             <button className="bg-pink-900 text-lime-200 font-semibold p-2 pl-5 pr-5 rounded cursor-pointer" onClick={handleFabrics}>
             Add +
           </button>
           <button className="bg-lime-200 text-pink-900 border-pink-900 border-2 font-semibold p-2 pl-5 pr-5 rounded cursor-pointer" onClick={handleClean}>
             Clear
           </button>
+          </div>
+         
         </div>
       </div>
 
-      <div className="flex w-3xl m-auto p-4 gap-4 justify-center pt-20">
+      <div className="flex lg:w-3xl m-auto p-4 gap-4 justify-center pt-20">
         {fabricList.map((fabric, index) => (
           <div className={`${fabric.className} p-2.5 rounded-2xl`} key={index}>
             {fabric.material} - {fabric.percentage}%
