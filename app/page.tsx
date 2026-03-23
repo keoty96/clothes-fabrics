@@ -9,6 +9,9 @@ import { PercentageDialog } from './components/PercentageDialog';
 import { DroppedItem, type DroppedItemData } from './components/DroppedItem';
 import { Sparkles } from 'lucide-react';
 
+const goodFabrics = ["cotton", "linen", "wool", "cashmere", "silk", "hemp", "tencel", "modal"];
+const badFabrics = ["polyester", "nylon", "viscose", "rayon", "elastene", "spandex", "acrylic", "acetate"];
+
 const availableOptions: OptionItem[] = [
   { id: '1', name: 'Cotton', color: '#f5b5ba' },
   { id: '2', name: 'Polyester', color: '#a8c9d4' },
@@ -18,6 +21,15 @@ const availableOptions: OptionItem[] = [
   { id: '6', name: 'Silk', color: '#f5d5c0' },
   { id: '7', name: 'Linen', color: '#c8d9d4' },
   { id: '8', name: 'Rayon', color: '#f4d89f' },
+  { id: '9', name: 'Hemp', color: '#7FB77E' },
+  { id: '10', name: 'Tencel', color: '#BDA6CE' },
+  { id: '11', name: 'Modal', color: '#2FA4D7' },
+  { id: '12', name: 'Nylon', color: '#B0E4CC' },
+  { id: '13', name: 'Viscose', color: '#DDAED3' },
+  { id: '14', name: 'Elastene', color: '#FDACAC' },
+  { id: '15', name: 'Spandex', color: '#F7E396' },
+  { id: '16', name: 'Acrylic', color: '#8CA9FF' },
+  { id: '17', name: 'Acetate', color: '#EDA35A' },
 ];
 
 export default function App() {
@@ -27,6 +39,21 @@ export default function App() {
 
   const totalPercentage = droppedItems.reduce((sum, item) => sum + item.percentage, 0);
   const isComplete = totalPercentage === 100;
+
+  // Calculate quality scores
+  const goodScore = droppedItems.reduce((sum, item) => {
+    if (goodFabrics.includes(item.name.toLowerCase())) {
+      return sum + item.percentage;
+    }
+    return sum;
+  }, 0);
+
+  const badScore = droppedItems.reduce((sum, item) => {
+    if (badFabrics.includes(item.name.toLowerCase())) {
+      return sum + item.percentage;
+    }
+    return sum;
+  }, 0);
 
   const handleDrop = (item: OptionItem) => {
     setPendingItem(item);
@@ -56,6 +83,36 @@ export default function App() {
     setDroppedItems(droppedItems.filter((item) => item.id !== id));
   };
 
+   const handleClear = () => {
+    setDroppedItems([]);
+  };
+
+  // Determine quality rating
+  const getQualityRating = () => {
+    if (goodScore >= 70 && badScore <= 30) {
+      return {
+        title: "High Quality",
+        message: "Buy it (durable, breathable, long-term).",
+        color: "#6b9e78"
+      };
+    } else if (goodScore >= 50 && goodScore <= 69) {
+      return {
+        title: "Medium Quality",
+        message: "(okay if you love style/price).",
+        color: "#f4c96b"
+      };
+    } else if ((goodScore > 0 && goodScore < 50) || badScore > 50) {
+      return {
+        title: "Low Quality",
+        message: "(fast fashion, short lifespan).",
+        color: "#d9594c"
+      };
+    }
+    return null;
+  };
+
+  const qualityRating = getQualityRating();
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="size-full flex bg-[#f5f0e8]">
@@ -73,6 +130,16 @@ export default function App() {
               <DraggableOption key={option.id} option={option} />
             ))}
           </div>
+
+          {/* Clear Button */}
+          {droppedItems.length > 0 && (
+            <button 
+              onClick={handleClear}
+              className="mt-6 w-full bg-[#d9594c] text-white font-semibold p-3 rounded-xl hover:bg-[#c24a3d] transition-colors"
+            >
+              Clear All
+            </button>
+          )}
         </div>
 
         {/* Right Content Area */}
@@ -131,30 +198,45 @@ export default function App() {
                     />
                   ))}
                   
-                  {/* Success Message */}
-                  {isComplete && (
-                    <div className="mt-6 p-6 bg-[#e8f4ea] rounded-2xl border-2 border-[#6b9e78] text-center animate-in fade-in slide-in-from-bottom-4 shadow-md">
-                      <Sparkles className="size-12 mx-auto mb-3 text-[#6b9e78]" />
-                      <h3 className="text-2xl font-bold text-[#4a7c59] mb-2">
-                        Perfect Blend! ✨
+                  {/* Success Message with Quality Rating */}
+                  {isComplete && qualityRating && (
+                    <div 
+                      className="mt-6 p-6 rounded-2xl border-2 text-center animate-in fade-in slide-in-from-bottom-4 shadow-md"
+                      style={{ 
+                        backgroundColor: `${qualityRating.color}15`,
+                        borderColor: qualityRating.color
+                      }}
+                    >
+                      <Sparkles className="size-12 mx-auto mb-3" style={{ color: qualityRating.color }} />
+                      <h3 className="text-2xl font-bold mb-2" style={{ color: qualityRating.color }}>
+                        {qualityRating.title} ✨
                       </h3>
-                      <p className="text-[#5a8c68] mb-4">
-                        Your fabric composition is complete at 100%
+                      <p className="mb-4" style={{ color: qualityRating.color }}>
+                        {qualityRating.message}
                       </p>
                       <div className="bg-white/80 rounded-xl p-4 inline-block shadow-sm">
-                        <p className="text-sm font-medium text-[#4a7c59] mb-2">Fabric Formula:</p>
+                        <p className="text-sm font-medium mb-2" style={{ color: qualityRating.color }}>
+                          Fabric Formula:
+                        </p>
                         <div className="text-left space-y-1">
-                          {droppedItems.map((item, index) => (
+                          {droppedItems.map((item) => (
                             <div key={item.id} className="flex items-center gap-2">
                               <div 
                                 className="w-4 h-4 rounded-full border border-white/50" 
                                 style={{ backgroundColor: item.color }}
                               />
-                              <span className="text-sm text-[#4a7c59]">
+                              <span className="text-sm" style={{ color: qualityRating.color }}>
                                 {item.percentage}% {item.name}
                               </span>
                             </div>
                           ))}
+                        </div>
+                        
+                        {/* Score Breakdown */}
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <p className="text-xs text-gray-600">
+                            Good fabrics: {goodScore.toFixed(1)}% | Bad fabrics: {badScore.toFixed(1)}%
+                          </p>
                         </div>
                       </div>
                     </div>
