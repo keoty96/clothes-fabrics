@@ -125,7 +125,7 @@ export default function App() {
             <p className="text-[#8b7355] text-sm">Drag fabrics to create your blend</p>
           </div>
           
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-y-auto h-[80vh]">
             {availableOptions.map((option) => (
               <DraggableOption key={option.id} option={option} />
             ))}
